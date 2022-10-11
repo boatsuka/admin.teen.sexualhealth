@@ -129,7 +129,7 @@ function ProfileTeacher() {
             style={{
               marginBottom: 16,
             }}
-            onClick={() => navigate("/teacher/profile")}
+            onClick={() => navigate("/student/add")}
           >
             <UserAddOutlined/>
             เพิ่มข้อมูลนักเรียน
