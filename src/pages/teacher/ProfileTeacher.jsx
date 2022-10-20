@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Table, Card, Row, Col, Statistic, Button, Avatar, Space } from "antd";
 import { getTeacherById } from "../../contexts/TeacherContext";
+import { deleteStudent } from "../../contexts/StudentContext";
 import {
   UserAddOutlined,
   UserOutlined,
@@ -26,6 +27,10 @@ function ProfileTeacher() {
     const data = await getTeacherById(teacherId);
 
     setStudent(data.students);
+  };
+
+  const DeleteStudent = async (student_id) => {
+    await deleteStudent(student_id).then(() => getTeacherById());
   };
 
   useEffect(() => {
@@ -81,10 +86,10 @@ function ProfileTeacher() {
           >
             ดูข้อมูล
           </Button>
-          <Button type="primary" style={{ background: "#ff9a00" }}>
+          <Button type="primary" style={{ background: "#ff9a00" }} onClick={() => navigate(`/student/edit/${record.student_id}`)}>
             แก้ไขข้อมูล
           </Button>
-          <Button danger type="primary">
+          <Button danger type="primary" onClick={() => DeleteStudent(record.student_id)}>
             ลบข้อมูล
           </Button>
         </Space>
