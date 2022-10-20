@@ -2,7 +2,11 @@ import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Table, Card, Row, Col, Statistic, Button, Avatar, Space } from "antd";
 import { getTeacherById } from "../../contexts/TeacherContext";
-import { ArrowDownOutlined, ArrowUpOutlined, UserAddOutlined } from "@ant-design/icons";
+import {
+  UserAddOutlined,
+  UserOutlined,
+  UserDeleteOutlined,
+} from "@ant-design/icons";
 
 function ProfileTeacher() {
   const navigate = useNavigate();
@@ -11,12 +15,12 @@ function ProfileTeacher() {
   const [teacher, setTeacher] = useState([]);
 
   const checkAuthToJWT = async () => {
-    const jwt = localStorage.getItem('jwt')
+    const jwt = localStorage.getItem("jwt");
 
     if (jwt === null) {
-      navigate('/')
+      navigate("/");
     }
-  }
+  };
 
   const getTeacher = async () => {
     const data = await getTeacherById(teacherId);
@@ -35,7 +39,7 @@ function ProfileTeacher() {
       dataIndex: "student_avatar_path",
       key: "student_avatar_path",
       width: 200,
-      render: (text) => <Avatar src={text}/>,
+      render: (text) => <Avatar src={text} />,
     },
     {
       title: "ชื่อ",
@@ -70,7 +74,11 @@ function ProfileTeacher() {
       key: "action",
       render: (_, record) => (
         <Space size="small">
-          <Button primary type="primary" onClick={() => navigate(`/student/profile/${record.student_id}`)}>
+          <Button
+            primary
+            type="primary"
+            onClick={() => navigate(`/student/profile/${record.student_id}`)}
+          >
             ดูข้อมูล
           </Button>
           <Button type="primary" style={{ background: "#ff9a00" }}>
@@ -90,36 +98,33 @@ function ProfileTeacher() {
         <Col sm={8}>
           <Card>
             <Statistic
-              title="Active"
-              value={11.28}
-              precision={2}
+              title="จำนวนนักเรียนทั้งหมด"
+              value={11}
+              valueStyle={{ color: "blue" }}
+              prefix={<UserOutlined />}
+              suffix="คน"
+            />
+          </Card>
+        </Col>
+        <Col sm={8}>
+          <Card>
+            <Statistic
+              title="จำนวนนักเรียนที่ผ่านหน่วยการเรียนรู้ทั้งหมด"
+              value={9}
               valueStyle={{ color: "#3f8600" }}
-              prefix={<ArrowUpOutlined />}
-              suffix="%"
+              prefix={<UserOutlined />}
+              suffix="คน"
             />
           </Card>
         </Col>
         <Col sm={8}>
           <Card>
             <Statistic
-              title="Idle"
-              value={9.3}
-              precision={2}
+              title="จำนวนนักเรียนที่ไม่ผ่านหน่วยการเรียนรู้ทั้งหมด"
+              value={9}
               valueStyle={{ color: "#cf1322" }}
-              prefix={<ArrowDownOutlined />}
-              suffix="%"
-            />
-          </Card>
-        </Col>
-        <Col sm={8}>
-          <Card>
-            <Statistic
-              title="Idle"
-              value={9.3}
-              precision={2}
-              valueStyle={{ color: "#cf1322" }}
-              prefix={<ArrowDownOutlined />}
-              suffix="%"
+              prefix={<UserDeleteOutlined />}
+              suffix="คน"
             />
           </Card>
         </Col>
@@ -131,7 +136,7 @@ function ProfileTeacher() {
             }}
             onClick={() => navigate("/student/add")}
           >
-            <UserAddOutlined/>
+            <UserAddOutlined />
             เพิ่มข้อมูลนักเรียน
           </Button>
           <Table

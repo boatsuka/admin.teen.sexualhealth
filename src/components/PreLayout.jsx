@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
-import { Layout, Menu, Card, Image } from "antd";
+import { Layout, Menu, Card, Image, Typography, Row, Col } from "antd";
 import { Outlet, Link } from "react-router-dom";
 import { HomeOutlined, LogoutOutlined } from "@ant-design/icons";
 
+
 function PreLayout() {
+  const { Title } = Typography;
   const [avatar, setAvatar] = useState("");
   const [teacherId, setTeacherId] = useState("");
   const { Header, Content, Sider, Footer } = Layout;
@@ -24,9 +26,8 @@ function PreLayout() {
           minHeight: "100vh",
         }}
       >
-        <Header />
         <Layout>
-          <Sider>
+          <Sider style={{ backgroundColor: "#ffff" }}>
             <Menu>
               <Image width={200} src={avatar} preview={false} />
               <Menu.Item key={1}>
