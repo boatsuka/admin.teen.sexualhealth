@@ -87,7 +87,7 @@ function EditStudent() {
               <Form.Item
                 label="คำนำหน้า"
                 name="student_initial_name"
-                initialValue={student[0]}
+                initialValue={student.student_initial_name}
                 rules={[{ required: true, message: "กรุณาเลือกคำนำหน้า" }]}
               >
                 <Select style={{ width: "100%" }}>
