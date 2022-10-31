@@ -21,7 +21,7 @@ function Login() {
 
     switch (data.user_role) {
       case "SUPER_ADMIN_USER":
-        navigate("/school");
+        navigate("/dashboard");
         break;
       case "ADMIN_USER_ROLE":
         navigate(`/school/profile/${data.school.school_id}`);

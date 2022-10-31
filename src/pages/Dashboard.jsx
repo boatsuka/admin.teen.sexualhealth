@@ -1,46 +1,42 @@
 import React, { useState, useEffect } from "react";
+import { getSchool } from "../contexts/SchoolContext";
 import {
   UserAddOutlined,
   UserDeleteOutlined,
   HomeOutlined,
 } from "@ant-design/icons";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Table, Card, Row, Col, Statistic, Button, Avatar, Space } from "antd";
-import { getSchoolById } from "../../contexts/SchoolContext";
 
-function ProfileSchool() {
+function Dashboard() {
   const navigate = useNavigate();
-  const { schoolId } = useParams();
   const [school, setSchool] = useState([]);
-  const [teacher, setTeacher] = useState([]);
 
-  const GetSchoolById = async (schoolId) => {
-    const data = await getSchoolById(schoolId);
+  const GetSchool = async () => {
+    const data = await getSchool();
 
-    setSchool(data[0]);
-    setTeacher(data[0].teacher)
-
+    setSchool(data);
   };
 
   const columns = [
     {
-      title: "รูปภาพ",
+      title: "รูปภาพโรงเรียน",
       dataIndex: "school_logo_path",
       key: "school_logo_path",
       width: 150,
       render: (text) => <Avatar src={text} />,
     },
     {
-      title: "ชื่อ",
-      dataIndex: "teacher_thai_firstname",
-      key: "teacher_thai_firstname",
+      title: "ชื่อโรงเรียน",
+      dataIndex: "school_thai_name",
+      key: "school_thai_name",
       width: 300,
       render: (text) => <p>{text}</p>,
     },
     {
-      title: "นามสกุล",
-      dataIndex: "teache_thai_lastname",
-      key: "teache_thai_lastname",
+      title: "ชื่อโรงเรียน *ภาษาอังกฤษ",
+      dataIndex: "school_english_name",
+      key: "school_english_name",
       width: 300,
       render: (text) => <p>{text}</p>,
     },
@@ -53,14 +49,14 @@ function ProfileSchool() {
           <Button
             primary
             type="primary"
-            onClick={() => navigate(`/teacher/profile/${record.teacher_id}`)}
+            onClick={() => navigate(`/school/profile/${record.school_id}`)}
           >
             ดูข้อมูล
           </Button>
           <Button
             type="primary"
             style={{ background: "#ff9a00" }}
-            onClick={() => navigate(`/teacher/edit/${record.teacher_id}`)}
+            onClick={() => navigate(`/school/edit/${record.school_id}`)}
           >
             แก้ไขข้อมูล
           </Button>
@@ -77,7 +73,7 @@ function ProfileSchool() {
   ];
 
   useEffect(() => {
-    GetSchoolById(schoolId);
+    GetSchool();
   }, []);
 
   return (
@@ -86,11 +82,11 @@ function ProfileSchool() {
         <Col sm={24}>
           <Card>
             <Statistic
-              title="จำนวนคุณครูทั้งหมด"
+              title="จำนวนโรงเรียนทั้งหมด"
               value={11}
               valueStyle={{ color: "blue" }}
               prefix={<HomeOutlined />}
-              suffix="คน"
+              suffix="แห่ง"
             />
           </Card>
         </Col>
@@ -108,7 +104,7 @@ function ProfileSchool() {
           <Table
             size="small"
             columns={columns}
-            dataSource={teacher}
+            dataSource={school}
             rowKey={"student_id"}
             pagination={{ pageSize: 50 }}
             scroll={{ y: 360 }}
@@ -119,4 +115,4 @@ function ProfileSchool() {
   );
 }
 
-export default ProfileSchool;
+export default Dashboard;

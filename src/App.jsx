@@ -10,6 +10,10 @@ import AddStudent from "./pages/student/AddStudent";
 import ProfileStudent from "./pages/student/ProfileStudent";
 import ProfileTeacher from "./pages/teacher/ProfileTeacher";
 import EditStudent from "./pages/student/EditStudent";
+import Dashboard from "./pages/Dashboard";
+import AddSchool from "./pages/school/AddSchool";
+import EditSchool from "./pages/school/EditSchool";
+import ProfileSchool from "./pages/school/ProfileSchool";
 
 function App() {
   return (
@@ -26,6 +30,12 @@ function App() {
               <Route path="edit/:studentId" element={<EditStudent />} />
               <Route path="profile/:studentId" element={<ProfileStudent />} />
             </Route>
+            <Route path="school">
+                <Route path="add" element={<AddSchool/>}/>
+                <Route path="edit/:schoolId" element={<EditSchool/>} />
+                <Route path="profile/:schoolId" element={<ProfileSchool/>} />
+            </Route>
+            <Route path="dashboard" element={<Dashboard />} />
           </Route>
           <Route index path="/" element={<Login />} />
           <Route path="*" element={<Error />} />

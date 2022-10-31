@@ -99,7 +99,7 @@ function ProfileTeacher() {
 
   return (
     <div>
-      <Row gutter={[16, 16]}>
+      <Row gutter={[16, 20]}>
         <Col sm={8}>
           <Card>
             <Statistic
@@ -150,7 +150,7 @@ function ProfileTeacher() {
             dataSource={student}
             rowKey={"student_id"}
             pagination={{ pageSize: 50 }}
-            scroll={{ y: 310 }}
+            scroll={{ y: 360 }}
           />
         </Col>
       </Row>
