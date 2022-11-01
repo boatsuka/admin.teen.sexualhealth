@@ -42,17 +42,27 @@ function EditStudent() {
     "http://www.teen-sexualhealth.com/api/files/upload/girl9.jpg",
     "http://www.teen-sexualhealth.com/api/files/upload/girl10.jpg",
   ];
+  const [form] = Form.useForm();
   const navigate = useNavigate();
   const { studentId } = useParams();
   const [mode, setMode] = useState(true);
-  const [student, setStudent] = useState([]);
+  const [student, setStudent] = useState({
+    student_fisrtname: "",
+    student_lastname: "",
+    student_level: "",
+    student_nickname: "",
+    student_study_year: "",
+    student_initial_name: "",
+    student_dragdrop: "",
+    student_avatar_path: "",
+  });
   const [teacherId, setTeacherId] = useState();
 
   const getStudent = useCallback(async () => {
     const data = await getStudentById(studentId);
 
-    setStudent(data);
-  })
+    form.setFieldsValue(data)
+  });
 
   const onSwitchMode = async (checked) => {
     setMode(checked);
@@ -70,24 +80,32 @@ function EditStudent() {
       values.student_avatar_path
     ).then(() => {
       navigate(`/teacher/profile/${teacherId}`);
-    })
+    });
   };
 
   useEffect(() => {
-    getStudent()
+    getStudent();
     setTeacherId(localStorage.getItem("teacher_id"));
-  }, []);
+  });
+
+  console.log(student)
 
   return (
     <>
       <Card>
-        <Form layout="vertical" onFinish={onFinish}>
+        <Form
+          form={form}
+          colon={false}
+          name="EditStudent"
+          layout="vertical"
+          onFinish={() => onFinish}
+        >
           <Row gutter={24}>
             <Col span={12}>
               <Form.Item
+              shouldUpdate
                 label="คำนำหน้า"
                 name="student_initial_name"
-                initialValue={student.student_initial_name}
                 rules={[{ required: true, message: "กรุณาเลือกคำนำหน้า" }]}
               >
                 <Select style={{ width: "100%" }}>
@@ -101,18 +119,18 @@ function EditStudent() {
             <Col span={12}>
               <Form.Item
                 label="ชื่อ"
+                
                 name="student_fisrtname"
-                initialValue={student.student_fisrtname}
+                
                 rules={[{ required: true, message: "กรุณากรอกชื่อ" }]}
               >
-                <Input />
+                <Input value={student.student_firsname} />
               </Form.Item>
             </Col>
             <Col span={12}>
               <Form.Item
                 label="นามสกุล"
                 name="student_lastname"
-                initialValue={student.student_lastname}
                 rules={[{ required: true, message: "กรุณากรอกนามสกุลถ" }]}
               >
                 <Input />
@@ -122,7 +140,6 @@ function EditStudent() {
               <Form.Item
                 label="ชื่อเล่น"
                 name="student_nickname"
-                initialValue={student.student_nickname}
                 rules={[{ required: true, message: "กรุณากรอกชื่อเล่น" }]}
               >
                 <Input />
@@ -133,7 +150,6 @@ function EditStudent() {
               <Form.Item
                 label="ระดับความสามารถ"
                 name="student_level"
-                initialValue={student.student_level}
                 rules={[
                   { required: true, message: "กรุณาเลือกระดับความสามารถ" },
                 ]}
@@ -148,7 +164,6 @@ function EditStudent() {
               <Form.Item
                 label="ระดับชั้นปีการศึกษา"
                 name="student_study_year"
-                initialValue={student.student_study_year}
                 rules={[
                   {
                     required: true,
@@ -170,7 +185,6 @@ function EditStudent() {
               <Form.Item
                 label="ระดับความสามารถในการทำแบบทดสอบ DragDrop"
                 name="student_dragdrop"
-                initialValue={student.student_dragdrop}
                 rules={[
                   { required: true, message: "กรุณาเลือกระดับความสามารถ" },
                 ]}
