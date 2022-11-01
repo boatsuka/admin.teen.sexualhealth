@@ -12,11 +12,12 @@ import {
   Tag,
   Button,
 } from "antd";
-import axios from 'axios';
+import axios from "axios";
 import { getStudentById, updateStudent } from "../../contexts/StudentContext";
 import { useNavigate, useParams } from "react-router-dom";
+import { getTeacherById } from "../../contexts/TeacherContext";
 
-function EditStudent() {
+function EditTeacher() {
   const avatar = [
     "http://www.teen-sexualhealth.com/api/files/upload/bear.jpg",
     "http://www.teen-sexualhealth.com/api/files/upload/boy1.jpg",
@@ -45,14 +46,14 @@ function EditStudent() {
   ];
   const [form] = Form.useForm();
   const navigate = useNavigate();
-  const { studentId } = useParams();
+  const { teacherId } = useParams();
   const [mode, setMode] = useState(true);
-  const [teacherId, setTeacherId] = useState();
 
-  const getStudent = useCallback(async () => {
-    const data = await getStudentById(studentId);
+  const getTeacher = useCallback(async () => {
+    const data = await getTeacherById(teacherId);
 
-    form.setFieldsValue(data)
+    form.setFieldsValue(data);
+    form.setFieldsValue(data.teacher);
   });
 
   const onSwitchMode = async (checked) => {
@@ -60,26 +61,22 @@ function EditStudent() {
   };
 
   const onFinish = async (values) => {
-    await axios
-    .patch(`${import.meta.env.VITE_API}/student/edit/${studentId}`, {
-      student_fisrtname: values.student_fisrtname,
-      student_lastname: values.student_lastname,
-      student_level: values.student_level,
-      student_nickname: values.student_nickname,
-      student_study_year: values.student_study_year,
-      student_initial_name: values.student_initial_name,
-      teacher: teacherId,
-      student_dragdrop: values.student_dragdrop,
-      student_avatar_path: values.student_avatar_path,
+    console.log(values)
+    await axios.patch(`${import.meta.env.VITE_API}/teacher/edit/${teacherId}`, {
+      teacher_thai_firstname: values.teacher_thai_firstname,
+      teache_thai_lastname: values.teache_thai_lastname,
+      teacher_nick_name: values.teacher_nick_name,
+      teacher_image_path: values.teacher_image_path,
     })
-    .then(async () => {
-      await navigate(`/teacher/profile/${teacherId}`)
-    })
+    .then(async (res) => {
+       console.log(res)
+      }).catch((err) => {
+        console.log(err)
+      })
   };
 
   useEffect(() => {
-    getStudent();
-    setTeacherId(localStorage.getItem("teacher_id"));
+    getTeacher();
   });
 
   return (
@@ -93,96 +90,68 @@ function EditStudent() {
           onFinish={onFinish}
         >
           <Row gutter={24}>
-            <Col span={12}>
+            {/* <Col span={12}>
               <Form.Item
-              shouldUpdate
-                label="คำนำหน้า"
-                name="student_initial_name"
-                rules={[{ required: true, message: "กรุณาเลือกคำนำหน้า" }]}
-              >
-                <Select style={{ width: "100%" }}>
-                  <Select.Option value="เด็กชาย">เด็กชาย</Select.Option>
-                  <Select.Option value="เด็กหญิง">เด็กหญิง</Select.Option>
-                  <Select.Option value="นาย">นาย</Select.Option>
-                  <Select.Option value="นางสาว">นางสาว</Select.Option>
-                </Select>
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item
-                label="ชื่อ"
-                name="student_fisrtname"
-                rules={[{ required: true, message: "กรุณากรอกชื่อ" }]}
+                label="ชื่อผู้ใช้งาน"
+                name="user_loginname"
+                rules={[{ required: true, message: "กรุณากรอกชื่อผู้ใช้งาน" }]}
               >
                 <Input />
               </Form.Item>
             </Col>
             <Col span={12}>
               <Form.Item
-                label="นามสกุล"
-                name="student_lastname"
-                rules={[{ required: true, message: "กรุณากรอกนามสกุลถ" }]}
+                label="รหัสผ่าน"
+                name="user_password"
+                rules={[{ required: true, message: "กรุณากรอกรหัสผ่าน" }]}
+              >
+                <Input type="password" />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                label="อีเมล์"
+                name="user_email"
+                rules={[{ required: true, message: "กรุณากรอกอีเมล์" }]}
               >
                 <Input />
               </Form.Item>
             </Col>
             <Col span={12}>
               <Form.Item
-                label="ชื่อเล่น"
-                name="student_nickname"
-                rules={[{ required: true, message: "กรุณากรอกชื่อเล่น" }]}
+                label="เบอร์โทรศัพท์"
+                name="user_telephone"
+                rules={[{ required: true, message: "กรุณากรอกเบอร์โทรศัพท์" }]}
+              >
+                <Input />
+              </Form.Item>
+            </Col> */}
+            <br />
+            <Col span={12}>
+              <Form.Item
+                label="ชื่อจริง *คุณครู"
+                name="teacher_thai_firstname"
+                rules={[{ required: true, message: "กรุณากรอกชื่อผู้ใช้งาน" }]}
               >
                 <Input />
               </Form.Item>
             </Col>
-
             <Col span={12}>
               <Form.Item
-                label="ระดับความสามารถ"
-                name="student_level"
-                rules={[
-                  { required: true, message: "กรุณาเลือกระดับความสามารถ" },
-                ]}
+                label="นามสกุล *คุณครู"
+                name="teache_thai_lastname"
+                rules={[{ required: true, message: "กรุณากรอกชื่อผู้ใช้งาน" }]}
               >
-                <Select style={{ width: "100%" }}>
-                  <Select.Option value={0}>Basic</Select.Option>
-                  <Select.Option value={1}>Advance</Select.Option>
-                </Select>
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item
-                label="ระดับชั้นปีการศึกษา"
-                name="student_study_year"
-                rules={[
-                  {
-                    required: true,
-                    message: "กรุณาเลือกระดับชั้นปีการศึกษา",
-                  },
-                ]}
-              >
-                <Select style={{ width: "100%" }}>
-                  <Select.Option value={1}>มัธยมศึกษาปีที่ 1</Select.Option>
-                  <Select.Option value={2}>มัธยมศึกษาปีที่ 2</Select.Option>
-                  <Select.Option value={3}>มัธยมศึกษาปีที่ 3</Select.Option>
-                  <Select.Option value={4}>มัธยมศึกษาปีที่ 4</Select.Option>
-                  <Select.Option value={5}>มัธยมศึกษาปีที่ 5</Select.Option>
-                  <Select.Option value={6}>มัธยมศึกษาปีที่ 6</Select.Option>
-                </Select>
+                <Input />
               </Form.Item>
             </Col>
             <Col span={24}>
               <Form.Item
-                label="ระดับความสามารถในการทำแบบทดสอบ DragDrop"
-                name="student_dragdrop"
-                rules={[
-                  { required: true, message: "กรุณาเลือกระดับความสามารถ" },
-                ]}
+                label="ชื่อเล่น *คุณครู"
+                name="teacher_nick_name"
+                rules={[{ required: true, message: "กรุณากรอกชื่อผู้ใช้งาน" }]}
               >
-                <Select style={{ width: "100%" }}>
-                  <Select.Option value={true}>ทำได้</Select.Option>
-                  <Select.Option value={false}>ทำไม่ได้</Select.Option>
-                </Select>
+                <Input />
               </Form.Item>
             </Col>
             <Col span={24}>
@@ -199,7 +168,7 @@ function EditStudent() {
                 )}
               </div>
               {mode === true ? (
-                <Form.Item name="student_avatar_path">
+                <Form.Item name="teacher_image_path">
                   <Select
                     size="large"
                     style={{ width: "100%", textAlign: "center" }}
@@ -251,4 +220,4 @@ function EditStudent() {
   );
 }
 
-export default EditStudent;
+export default EditTeacher;

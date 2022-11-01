@@ -6,3 +6,11 @@ export const getTeacherById = async (teacherId) => {
 
     return data
 };
+
+
+export const getUserById = async (userId) => {
+    const data = await axios.get(`${import.meta.env.VITE_API}/user/${userId}`)
+    .then((res) => res.data)
+
+    return data
+}

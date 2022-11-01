@@ -12,6 +12,7 @@ import {
   Tag,
   Button,
 } from "antd";
+import axios from 'axios'
 import { postStudent } from "../../contexts/StudentContext";
 import { useNavigate } from "react-router-dom";
 
@@ -51,19 +52,21 @@ function AddStudent() {
   };
 
   const onFinish = async (values) => {
-    const res = await postStudent(
-      teacherId,
-      values.student_fisrtname,
-      values.student_lastname,
-      values.student_level,
-      values.student_nickname,
-      values.student_study_year,
-      values.student_initial_name,
-      values.student_dragdrop,
-      values.student_avatar_path
-    );
-
+    await axios
+    .post(`${import.meta.env.VITE_API}/student/create`, {
+      student_fisrtname: values.student_fisrtname,
+      student_lastname: values.student_lastname,
+      student_level: values.student_level,
+      student_nickname: values.student_nickname,
+      student_study_year: values.student_study_year,
+      student_initial_name: values.student_initial_name,
+      teacher: teacherId,
+      student_dragdrop: values.student_dragdrop,
+      student_avatar_path: values.student_avatar_path,
+    })
+    .then((res) => {
       navigate(`/teacher/profile/${teacherId}`)
+    })
   };
 
   useEffect(() => {

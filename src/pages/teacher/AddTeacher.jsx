@@ -51,7 +51,7 @@ function AddTeacher() {
   };
 
   const onFinish = async (values) => {
-    const res = await postStudent(
+    const res = await postTeacher(
       teacherId,
       values.student_fisrtname,
       values.student_lastname,

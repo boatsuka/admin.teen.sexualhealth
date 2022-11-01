@@ -14,6 +14,7 @@ import Dashboard from "./pages/Dashboard";
 import AddSchool from "./pages/school/AddSchool";
 import EditSchool from "./pages/school/EditSchool";
 import ProfileSchool from "./pages/school/ProfileSchool";
+import EditTeacher from "./pages/teacher/EditTeacher";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
           <Route element={<PreLayout />}>
             <Route path="teacher">
               <Route path="add" element={<AddTeacher />} />
+              <Route path="edit/:teacherId" element={<EditTeacher/>} />
               <Route path="profile/:teacherId" element={<ProfileTeacher />} />
             </Route>
             <Route path="student">

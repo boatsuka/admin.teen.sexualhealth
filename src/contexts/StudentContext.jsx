@@ -69,10 +69,11 @@ export const updateStudent = async (
   student_study_year,
   student_initial_name,
   student_dragdrop,
-  student_avatar_path
+  student_avatar_path,
+  teacher_id,
 ) => {
   const data = axios
-    .patch(`${import.meta.env.VITE_API}/student/update/${student_id}`, {
+    .patch(`${import.meta.env.VITE_API}/student/edit/${student_id}`, {
       student_fisrtname: student_fisrtname,
       student_lastname: student_lastname,
       student_level: student_level,
@@ -81,6 +82,7 @@ export const updateStudent = async (
       student_initial_name: student_initial_name,
       student_dragdrop: student_dragdrop,
       student_avatar_path: student_avatar_path,
+      teacher: teacher_id,
     })
     .then((res) => res.data);
 

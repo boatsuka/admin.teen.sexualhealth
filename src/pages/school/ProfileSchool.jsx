@@ -103,7 +103,7 @@ function ProfileSchool() {
             onClick={() => navigate("/school/add")}
           >
             <UserAddOutlined />
-            เพิ่มข้อมูลโรงเรียน
+            เพิ่มข้อมูลคุณครู
           </Button>
           <Table
             size="small"

@@ -36,7 +36,13 @@ function PreLayout() {
                   <span>หน้าหลัก</span>
                 </Link>
               </Menu.Item>
-              <Menu.Item key={2} onClick={() => localStorage.clear()}>
+              <Menu.Item key={2}>
+                <Link to={`/teacher/edit/${teacherId}`}>
+                  <HomeOutlined />
+                  <span>แก้ไขข้อมูลผู้ใช้งาน</span>
+                </Link>
+              </Menu.Item>
+              <Menu.Item key={3} onClick={() => localStorage.clear()}>
                 <Link to="/">
                   <LogoutOutlined />
                   <span>ออกจากระบบ</span>
