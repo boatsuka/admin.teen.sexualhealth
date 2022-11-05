@@ -15,9 +15,35 @@ import {
 import axios from "axios";
 
 function AddSchool() {
+  const [file, setFile] = useState();
+  const [path, setPath] = useState();
+
+  function handleChange(event) {
+    setFile(event.target.files[0]);
+  }
+
   const onFinish = async (values) => {
     const formData = new FormData();
-    formData.append("school_logo_path", values.school_logo_path);
+    formData.append("file", file);
+
+    await axios
+      .post(`${import.meta.env.VITE_API}/files/upload`, formData)
+      .then((res) => {
+       axios.post(`${import.meta.env.VITE_API}/school/create`, {
+          school_thai_name: values.school_thai_name,
+          school_address_number: values.school_address_number,
+          school_zone: values.school_zone,
+          school_english_name: values.school_english_name,
+          school_road: values.school_road,
+          school_subdistrict: values.school_subdistrict,
+          school_district: values.school_district,
+          school_province: values.school_province,
+          school_postcode: values.school_postcode,
+          school_code_url: Math.floor(Math.random() * 100000),
+          school_logo_path: `${import.meta.env.VITE_API}/files/upload/${res.data.path}`,
+          coordinate_teacher_id: 0,
+        });
+      });
   };
 
   return (
@@ -115,22 +141,9 @@ function AddSchool() {
                 <Input />
               </Form.Item>
             </Col>
-            {/* <Col span={24}>
-              <Form.Item
-                label="รูปตราสัญลักษณ์"
-                name="school_logo_path"
-                rules={[{ required: true, message: "กรุณาใส่รูปตราสัญลักษณ์" }]}
-              >
-                <Upload
-                  accept="image/png, image/jpeg"
-                  maxCount={1}
-                  listType="picture-card"
-                  showUploadList={false}
-                >
-                  <Button icon={<UploadOutlined />}>อัพโหลดรูปภาพ</Button>
-                </Upload>
-              </Form.Item>
-            </Col> */}
+            <Col span={[24]}>
+              <Input type="file" onChange={handleChange} />
+            </Col>
             <Col span={24}>
               <Form.Item>
                 <Button

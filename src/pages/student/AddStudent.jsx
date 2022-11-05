@@ -56,6 +56,7 @@ function AddStudent() {
     .post(`${import.meta.env.VITE_API}/student/create`, {
       student_fisrtname: values.student_fisrtname,
       student_lastname: values.student_lastname,
+      student_gender: values.student_initial_name === "เด็กชาย" || values.student_initial_name === "นาย" ? "m" : "f",
       student_level: values.student_level,
       student_nickname: values.student_nickname,
       student_study_year: values.student_study_year,
@@ -205,7 +206,7 @@ function AddStudent() {
                   </Select>
                 </Form.Item>
               ) : (
-                <Form.Item>
+                <Form.Item name="student_avatar_path">
                   <Input type="file" />
                 </Form.Item>
               )}

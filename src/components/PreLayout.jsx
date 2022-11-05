@@ -3,14 +3,15 @@ import { Layout, Menu, Card, Image, Typography, Row, Col } from "antd";
 import { Outlet, Link } from "react-router-dom";
 import { HomeOutlined, LogoutOutlined } from "@ant-design/icons";
 
-
 function PreLayout() {
   const { Title } = Typography;
+  const [role, setRole] = useState("");
   const [avatar, setAvatar] = useState("");
   const [teacherId, setTeacherId] = useState("");
   const { Header, Content, Sider, Footer } = Layout;
 
   const checkUserDetail = async () => {
+    setRole(localStorage.getItem("user_role"));
     setTeacherId(localStorage.getItem("teacher_id"));
     setAvatar(localStorage.getItem("teacher_image_path"));
   };
@@ -36,12 +37,14 @@ function PreLayout() {
                   <span>หน้าหลัก</span>
                 </Link>
               </Menu.Item>
-              <Menu.Item key={2}>
-                <Link to={`/teacher/edit/${teacherId}`}>
-                  <HomeOutlined />
-                  <span>แก้ไขข้อมูลผู้ใช้งาน</span>
-                </Link>
-              </Menu.Item>
+              {role !== "SUPER_ADMIN_USER" ?  (
+                <Menu.Item key={2}>
+                  <Link to={`/teacher/edit/${teacherId}`}>
+                    <HomeOutlined />
+                    <span>แก้ไขข้อมูลผู้ใช้งาน</span>
+                  </Link>
+                </Menu.Item>
+              ): null}
               <Menu.Item key={3} onClick={() => localStorage.clear()}>
                 <Link to="/">
                   <LogoutOutlined />

@@ -9,24 +9,39 @@ function Login() {
   const navigate = useNavigate();
 
   const onFinish = async (values) => {
-     const res = await authToLogin(values.username, values.password);
+    const res = await authToLogin(values.username, values.password);
     const data = jwt_decode(res.access_token);
-
-    localStorage.setItem("jwt", res.access_token);
-    localStorage.setItem("user_id", data.user_id);
-    localStorage.setItem("user_role", data.user_role);
-    localStorage.setItem("teacher_id", data.teacher.teacher_id);
-    localStorage.setItem("teacher_image_path", data.teacher.teacher_image_path);
-    localStorage.setItem("school_id", data.school.school_id);
 
     switch (data.user_role) {
       case "SUPER_ADMIN_USER":
+        localStorage.setItem("jwt", res.access_token);
+        localStorage.setItem("user_id", data.user_id);
+        localStorage.setItem("user_role", data.user_role);
+        localStorage.setItem("teacher_image_path", "http://www.teen-sexualhealth.com/api/files/upload/bear.jpg")
         navigate("/dashboard");
         break;
       case "ADMIN_USER_ROLE":
+        localStorage.setItem("jwt", res.access_token);
+        localStorage.setItem("user_id", data.user_id);
+        localStorage.setItem("user_role", data.user_role);
+        localStorage.setItem("teacher_id", data.teacher.teacher_id);
+        localStorage.setItem(
+          "teacher_image_path",
+          data.teacher.teacher_image_path
+        );
+        localStorage.setItem("school_id", data.school.school_id);
         navigate(`/school/profile/${data.school.school_id}`);
         break;
       case "NORMAL_USER_ROLE":
+        localStorage.setItem("jwt", res.access_token);
+        localStorage.setItem("user_id", data.user_id);
+        localStorage.setItem("user_role", data.user_role);
+        localStorage.setItem("teacher_id", data.teacher.teacher_id);
+        localStorage.setItem(
+          "teacher_image_path",
+          data.teacher.teacher_image_path
+        );
+        localStorage.setItem("school_id", data.school.school_id);
         navigate(`/teacher/profile/${data.teacher.teacher_id}`);
         break;
       default:
@@ -48,7 +63,7 @@ function Login() {
             <Col span={8}>
               <Image src={"https://joeschmoe.io/api/v1/random"} size={600} />
             </Col>
-            <Col span={16} style={{marginTop: "10px"}}>
+            <Col span={16} style={{ marginTop: "10px" }}>
               <Row gutter={[24, 24]}>
                 <Form onFinish={onFinish}>
                   <Form.Item

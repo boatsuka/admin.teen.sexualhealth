@@ -202,7 +202,7 @@ function AddTeacher() {
                   </Select>
                 </Form.Item>
               ) : (
-                <Form.Item>
+                <Form.Item name="student_avatar_path">
                   <Input type="file" />
                 </Form.Item>
               )}
