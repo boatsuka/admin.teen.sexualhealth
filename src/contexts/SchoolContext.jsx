@@ -14,3 +14,10 @@ export const getSchoolById = async (schoolId) => {
 
     return data
 };
+
+export const deleteSchool = async (schoolId) => {
+    const data = await axios.delete(`${import.meta.env.VITE_API}/school/remove-hard/${schoolId}`)
+    .then((res) => res.data)
+
+    return data
+}

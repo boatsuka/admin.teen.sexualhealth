@@ -13,10 +13,12 @@ import {
   Button,
 } from "antd";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function AddSchool() {
   const [file, setFile] = useState();
   const [path, setPath] = useState();
+  const navigate = useNavigate();
 
   function handleChange(event) {
     setFile(event.target.files[0]);
@@ -27,23 +29,42 @@ function AddSchool() {
     formData.append("file", file);
 
     await axios
-      .post(`${import.meta.env.VITE_API}/files/upload`, formData)
-      .then((res) => {
-       axios.post(`${import.meta.env.VITE_API}/school/create`, {
-          school_thai_name: values.school_thai_name,
-          school_address_number: values.school_address_number,
-          school_zone: values.school_zone,
-          school_english_name: values.school_english_name,
-          school_road: values.school_road,
-          school_subdistrict: values.school_subdistrict,
-          school_district: values.school_district,
-          school_province: values.school_province,
-          school_postcode: values.school_postcode,
-          school_code_url: Math.floor(Math.random() * 100000),
-          school_logo_path: `${import.meta.env.VITE_API}/files/upload/${res.data.path}`,
-          coordinate_teacher_id: 0,
-        });
-      });
+      .all([
+        axios.post(`${import.meta.env.VITE_API}/files/upload`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            "Access-Control-Allow-Origin": "*",
+          },
+        }),
+      ])
+      .then(
+        axios.spread(async (...res) => {
+          const img = await res[0].data.path;
+
+          await axios.post(
+            `${import.meta.env.VITE_API}/school/create`,
+            {
+              school_thai_name: values.school_thai_name,
+              school_address_number: values.school_address_number,
+              school_zone: values.school_zone,
+              school_english_name: values.school_english_name,
+              school_road: values.school_road,
+              school_subdistrict: values.school_subdistrict,
+              school_district: values.school_district,
+              school_province: values.school_province,
+              school_postcode: values.school_postcode,
+              school_code_url: Math.floor(Math.random() * 10000),
+              school_logo_path: `${
+                import.meta.env.VITE_API
+              }/files/upload/${img}`,
+              coordinate_teacher_id: 0,
+            },
+            { headers: { "Content-Type": "application/json" } }
+          );
+        })
+      );
+
+    await navigate("/dashboard");
   };
 
   return (

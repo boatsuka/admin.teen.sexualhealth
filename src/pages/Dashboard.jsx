@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { getSchool } from "../contexts/SchoolContext";
+import { deleteSchool, getSchool } from "../contexts/SchoolContext";
 import {
   UserAddOutlined,
   UserDeleteOutlined,
@@ -11,12 +11,6 @@ import { Table, Card, Row, Col, Statistic, Button, Avatar, Space } from "antd";
 function Dashboard() {
   const navigate = useNavigate();
   const [school, setSchool] = useState([]);
-
-  const GetSchool = async () => {
-    const data = await getSchool();
-
-    setSchool(data);
-  };
 
   const columns = [
     {
@@ -63,7 +57,10 @@ function Dashboard() {
           <Button
             danger
             type="primary"
-            onClick={() => DeleteStudent(record.student_id)}
+            onClick={async () => {
+              await deleteSchool(record.school_id);
+              await GetSchool();
+            }}
           >
             ลบข้อมูล
           </Button>
@@ -72,9 +69,17 @@ function Dashboard() {
     },
   ];
 
+  const GetSchool = async () => {
+    const data = await getSchool();
+
+    setSchool(data);
+  };
+
   useEffect(() => {
     GetSchool();
-  }, []);
+  },[]);
+
+  console.log(school)
 
   return (
     <>
@@ -106,7 +111,7 @@ function Dashboard() {
             columns={columns}
             dataSource={school}
             rowKey={"student_id"}
-            pagination={{ pageSize: 50 }}
+            pagination={{ pageSize: 20 }}
             scroll={{ y: 360 }}
           />
         </Col>
