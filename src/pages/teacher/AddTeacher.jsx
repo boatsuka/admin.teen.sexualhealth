@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   Select,
   Image,
@@ -13,10 +13,11 @@ import {
   Button,
 } from "antd";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import { getSchool } from "../../contexts/SchoolContext";
+import { getStudentById, updateStudent } from "../../contexts/StudentContext";
+import { useNavigate, useParams } from "react-router-dom";
+import { getTeacherById } from "../../contexts/TeacherContext";
 
-function AddTeacher() {
+function EditTeacher() {
   const avatar = [
     "http://www.teen-sexualhealth.com/api/files/upload/bear.jpg",
     "http://www.teen-sexualhealth.com/api/files/upload/boy1.jpg",
@@ -43,101 +44,119 @@ function AddTeacher() {
     "http://www.teen-sexualhealth.com/api/files/upload/girl9.jpg",
     "http://www.teen-sexualhealth.com/api/files/upload/girl10.jpg",
   ];
+  const [form] = Form.useForm();
   const navigate = useNavigate();
-  const [school, setSchool] = useState();
-  const [teacherId, setTeacherId] = useState();
+  const { teacherId } = useParams();
+  const [mode, setMode] = useState(true);
 
+  const getTeacher = useCallback(async () => {
+    const data = await getTeacherById(teacherId);
 
-  const GetSchool = async () => {
-    const data = await getSchool();
+    form.setFieldsValue(data);
+    form.setFieldsValue(data.teacher);
+  });
 
-    setSchool(data);
+  const onSwitchMode = async (checked) => {
+    setMode(checked);
   };
 
   const onFinish = async (values) => {
-    
-    // axios
-    //   .all([
-    //     axios.post(`${import.meta.env.VITE_API}/teacher/create`, {
-    //       teacher_thai_firstname: "string",
-    //       teache_thai_lastname: "string",
-    //       teacher_nick_name: "string",
-    //       teacher_nickname_sound_path: "string",
-    //       teacher_image_path: "string",
-    //       school: {},
-    //     }),
-    //     axios.post(`${import.meta.env.VITE_API}/files/upload`),
-    //   ])
-    //   .then(
-    //     axios.spread((...res) => {
-    //       axios.post(`${import.meta.env.VITE_API}/user/create`, {
-    //         user_loginname: "string",
-    //         user_password: "string",
-    //         user_full_name: "string",
-    //         user_email: "string",
-    //         user_telephone: "string",
-    //         user_role: "string",
-    //         user_image_path: "string",
-    //         teacher: {},
-    //         school: {},
-    //       });
-    //     })
-    //   );
-    // navigate(`/teacher/profile/${teacherId}`);
+    console.log(values)
+    await axios.patch(`${import.meta.env.VITE_API}/teacher/edit/${teacherId}`, {
+      teacher_thai_firstname: values.teacher_thai_firstname,
+      teache_thai_lastname: values.teache_thai_lastname,
+      teacher_nick_name: values.teacher_nick_name,
+      teacher_image_path: values.teacher_image_path,
+    })
+    .then(async (res) => {
+       console.log(res)
+      }).catch((err) => {
+        console.log(err)
+      })
   };
 
   useEffect(() => {
-    GetSchool()
-  }, [])
-
-  console.log(school)
+    getTeacher();
+  });
 
   return (
     <>
       <Card>
-        <Form layout="vertical" onFinish={onFinish}>
+        <Form
+          form={form}
+          colon={false}
+          name="AddStudent"
+          layout="vertical"
+          onFinish={onFinish}
+        >
           <Row gutter={24}>
             <Col span={12}>
               <Form.Item
-                label="โรงเรียน"
-                name="school"
-                rules={[{ required: true, message: "กรุณาเลือกโรงเรียน" }]}
-              >
-                <Select style={{ width: "100%" }}>
-                  {
-                    school.map((item, index) => (
-                      <Select.Option key={index} value={item.school_id}>{item.school_thai_name}</Select.Option>
-                    ))
-                  }
-                </Select>
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item
-                label="ชื่อ"
+                label="ชื่อจริง *คุณครู"
                 name="teacher_thai_firstname"
-                rules={[{ required: true, message: "กรุณากรอกชื่อ" }]}
+                rules={[{ required: true, message: "กรุณากรอกชื่อผู้ใช้งาน" }]}
               >
                 <Input />
               </Form.Item>
             </Col>
             <Col span={12}>
               <Form.Item
-                label="นามสกุล"
+                label="นามสกุล *คุณครู"
                 name="teache_thai_lastname"
-                rules={[{ required: true, message: "กรุณากรอกนามสกุลถ" }]}
+                rules={[{ required: true, message: "กรุณากรอกชื่อผู้ใช้งาน" }]}
               >
                 <Input />
               </Form.Item>
             </Col>
-            <Col span={12}>
+            <Col span={24}>
               <Form.Item
-                label="ชื่อเล่น"
+                label="ชื่อเล่น *คุณครู"
                 name="teacher_nick_name"
-                rules={[{ required: true, message: "กรุณากรอกชื่อเล่น" }]}
+                rules={[{ required: true, message: "กรุณากรอกชื่อผู้ใช้งาน" }]}
               >
                 <Input />
               </Form.Item>
+            </Col>
+            <Col span={24}>
+              <div style={{ marginBottom: "5px" }}>
+                <Switch defaultChecked onChange={onSwitchMode} />
+                {mode ? (
+                  <Tag color={"blue"} style={{ marginLeft: "10px" }}>
+                    เลือกรูปภาพจากภายนอก
+                  </Tag>
+                ) : (
+                  <Tag color={"green"} style={{ marginLeft: "10px" }}>
+                    เลือกรูปภาพจากระบบ
+                  </Tag>
+                )}
+              </div>
+              {mode === true ? (
+                <Form.Item name="teacher_image_path">
+                  <Select
+                    size="large"
+                    style={{ width: "100%", textAlign: "center" }}
+                  >
+                    {avatar.map((item, index) => (
+                      <Select.Option
+                        key={index}
+                        value={item}
+                        style={{ textAlign: "center" }}
+                      >
+                        <Image
+                          src={item}
+                          alt="avatar"
+                          width={120}
+                          height={120}
+                        />
+                      </Select.Option>
+                    ))}
+                  </Select>
+                </Form.Item>
+              ) : (
+                <Form.Item>
+                  <Input type="file" />
+                </Form.Item>
+              )}
             </Col>
             <Col span={24}>
               <Form.Item>
@@ -164,4 +183,4 @@ function AddTeacher() {
   );
 }
 
-export default AddTeacher;
+export default EditTeacher;

@@ -71,12 +71,24 @@ function ProfileStudent() {
     },
     {
       title: "ชื่อหน่วยการเรียนรู้",
-      dataIndex: ["submodule", "submodule_name"],
-      key: "submodule",
+      dataIndex: ["submodule", "module", "module_name"],
+      key: "module",
       width: 150,
     },
     {
+      title: "ชื่อหน่วยการเรียนรู้ย่อย",
+      dataIndex: ["submodule", "submodule_name"],
+      key: "module",
       width: 150,
+    },
+    {
+      title: "คะแนน",
+      dataIndex: ["learninglog", "learninglog_score"],
+      key: "module",
+      width: 50,
+    },
+    {
+      width: 120,
       title: "เปลี่ยนสถานะหน่วยการเรียนรู้",
       key: "เปลี่ยนสถานะหน่วยการเรียนรู้",
       render: (_, record) => (
@@ -98,31 +110,31 @@ function ProfileStudent() {
     },
   ];
 
-  const expandedRowRender = () => {
-    const columns = [
-      {
-        title: "เวลาที่เริ่มทำแบบทดสอบ",
-        dataIndex: "learninglog_begin",
-        key: "learninglog_begin",
-        render: (text) => <p>{new Date(text).toLocaleString("th-TH")}</p>,
-      },
-      {
-        title: "เวลาที่เลิกทำแบบทดสอบ",
-        dataIndex: "learninglog_end",
-        key: "learninglog_end",
-        render: (text) => <span>{new Date(text).toLocaleString("th-TH")}</span>,
-      },
-    ];
+  // const expandedRowRender = () => {
+  //   const columns = [
+  //     {
+  //       title: "เวลาที่เริ่มทำแบบทดสอบ",
+  //       dataIndex: "learninglog_begin",
+  //       key: "learninglog_begin",
+  //       render: (text) => <p>{new Date(text).toLocaleString("th-TH")}</p>,
+  //     },
+  //     {
+  //       title: "เวลาที่เลิกทำแบบทดสอบ",
+  //       dataIndex: "learninglog_end",
+  //       key: "learninglog_end",
+  //       render: (text) => <span>{new Date(text).toLocaleString("th-TH")}</span>,
+  //     },
+  //   ];
 
-    return (
-      <Table
-        columns={columns}
-        dataSource={learninglog}
-        pagination={false}
-        rowKey={"learninglog_id"}
-      />
-    );
-  };
+  //   return (
+  //     <Table
+  //       columns={columns}
+  //       dataSource={learninglog}
+  //       pagination={false}
+  //       rowKey={"learninglog_id"}
+  //     />
+  //   );
+  // };
 
   return (
     <div>
@@ -174,10 +186,10 @@ function ProfileStudent() {
               dataSource={score}
               rowKey={"student_submodule_id"}
               pagination={{ pageSize: 10 }}
-              expandable={{
-                expandedRowRender,
-                defaultExpandedRowKeys: ["0"],
-              }}
+              // expandable={{
+              //   expandedRowRender,
+              //   defaultExpandedRowKeys: ["0"],
+              // }}
               scroll={{ y: 230 }}
             />
           </div>
