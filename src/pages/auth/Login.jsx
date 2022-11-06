@@ -17,7 +17,10 @@ function Login() {
         localStorage.setItem("jwt", res.access_token);
         localStorage.setItem("user_id", data.user_id);
         localStorage.setItem("user_role", data.user_role);
-        localStorage.setItem("teacher_image_path", "http://www.teen-sexualhealth.com/api/files/upload/bear.jpg")
+        localStorage.setItem(
+          "teacher_image_path",
+          "http://www.teen-sexualhealth.com/api/files/upload/bear.jpg"
+        );
         navigate("/dashboard");
         break;
       case "ADMIN_USER_ROLE":
@@ -59,29 +62,32 @@ function Login() {
         }}
       >
         <Card>
-          <Row gutter={[8, 8]}>
+          <Row gutter={[16, 16]}>
             <Col span={8}>
               <Image src={"https://joeschmoe.io/api/v1/random"} size={600} />
             </Col>
-            <Col span={16} style={{ marginTop: "10px" }}>
+            <Col span={8} style={{ marginTop: "10px", marginLeft: "80px" }}>
               <Row gutter={[24, 24]}>
-                <Form onFinish={onFinish}>
-                  <Form.Item
-                    label="ชื่อผู้ใช้งาน"
-                    name="username"
-                    rules={[
-                      { required: true, message: "กรุณากรอกชื่อผู้ใช้งาน" },
-                    ]}
-                  >
-                    <Input prefix={<UserOutlined />} />
-                  </Form.Item>
-                  <Form.Item
-                    label="รหัสผ่าน"
-                    name="password"
-                    rules={[{ required: true, message: "กรุณากรอกรหัสผ่าน" }]}
-                  >
-                    <Input.Password prefix={<SafetyCertificateOutlined />} />
-                  </Form.Item>
+                <Form
+                  layout="vertical"
+                  onFinish={onFinish}
+                >
+                    <Form.Item
+                      label="ชื่อผู้ใช้งาน"
+                      name="username"
+                      rules={[
+                        { required: true, message: "กรุณากรอกชื่อผู้ใช้งาน" },
+                      ]}
+                    >
+                      <Input prefix={<UserOutlined />} />
+                    </Form.Item>      
+                    <Form.Item
+                      label="รหัสผ่าน"
+                      name="password"
+                      rules={[{ required: true, message: "กรุณากรอกรหัสผ่าน" }]}
+                    >
+                      <Input.Password prefix={<SafetyCertificateOutlined />} />
+                    </Form.Item>
                   <Form.Item>
                     <Button type="primary" htmlType="submit">
                       เข้าสู่ระบบ

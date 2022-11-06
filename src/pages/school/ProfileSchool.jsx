@@ -100,7 +100,7 @@ function ProfileSchool() {
             style={{
               marginBottom: 16,
             }}
-            onClick={() => navigate("/school/add")}
+            onClick={() => navigate("/teacher/add")}
           >
             <UserAddOutlined />
             เพิ่มข้อมูลคุณครู
