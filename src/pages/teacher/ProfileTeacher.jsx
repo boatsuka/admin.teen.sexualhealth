@@ -89,7 +89,7 @@ function ProfileTeacher() {
           <Button type="primary" style={{ background: "#ff9a00" }} onClick={() => navigate(`/student/edit/${record.student_id}`)}>
             แก้ไขข้อมูล
           </Button>
-          <Button danger type="primary" onClick={() => DeleteStudent(record.student_id)}>
+          <Button danger type="primary" onClick={() => DeleteTeacher(record.student_id)}>
             ลบข้อมูล
           </Button>
         </Space>

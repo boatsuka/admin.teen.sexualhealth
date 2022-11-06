@@ -7,6 +7,7 @@ import {
 import { useNavigate, useParams } from "react-router-dom";
 import { Table, Card, Row, Col, Statistic, Button, Avatar, Space } from "antd";
 import { getSchoolById } from "../../contexts/SchoolContext";
+import { deleteTeacher } from "../../contexts/TeacherContext";
 
 function ProfileSchool() {
   const navigate = useNavigate();
@@ -20,6 +21,10 @@ function ProfileSchool() {
     setSchool(data[0]);
     setTeacher(data[0].teacher)
 
+  };
+
+  const DeleteTeacher = async (teacher_id) => {
+    await deleteTeacher(teacher_id).then(() => GetSchoolById(schoolId));
   };
 
   const columns = [
@@ -67,7 +72,7 @@ function ProfileSchool() {
           <Button
             danger
             type="primary"
-            onClick={() => DeleteStudent(record.student_id)}
+            onClick={async () => {await DeleteTeacher(record.teacher_id), await GetSchoolById(schoolId);}}
           >
             ลบข้อมูล
           </Button>

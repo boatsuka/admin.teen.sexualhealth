@@ -48,6 +48,8 @@ function EditTeacher() {
   const navigate = useNavigate();
   const { teacherId } = useParams();
   const [mode, setMode] = useState(true);
+  const [schoolId, setSchoolId] = useState()
+
 
   const getTeacher = useCallback(async () => {
     const data = await getTeacherById(teacherId);
@@ -61,22 +63,21 @@ function EditTeacher() {
   };
 
   const onFinish = async (values) => {
-    console.log(values)
-    await axios.patch(`${import.meta.env.VITE_API}/teacher/edit/${teacherId}`, {
-      teacher_thai_firstname: values.teacher_thai_firstname,
-      teache_thai_lastname: values.teache_thai_lastname,
-      teacher_nick_name: values.teacher_nick_name,
-      teacher_image_path: values.teacher_image_path,
-    })
-    .then(async (res) => {
-       console.log(res)
-      }).catch((err) => {
-        console.log(err)
+    await axios
+      .patch(`${import.meta.env.VITE_API}/teacher/edit/${teacherId}`, {
+        teacher_thai_firstname: values.teacher_thai_firstname,
+        teache_thai_lastname: values.teache_thai_lastname,
+        teacher_nick_name: values.teacher_nick_name,
+        teacher_image_path: values.teacher_image_path,
       })
+      .then(() => {
+        navigate(`/school/profile/${schoolId}`);
+      });
   };
 
   useEffect(() => {
     getTeacher();
+    setSchoolId(localStorage.getItem('school_id'))
   });
 
   return (
@@ -90,43 +91,6 @@ function EditTeacher() {
           onFinish={onFinish}
         >
           <Row gutter={24}>
-            {/* <Col span={12}>
-              <Form.Item
-                label="ชื่อผู้ใช้งาน"
-                name="user_loginname"
-                rules={[{ required: true, message: "กรุณากรอกชื่อผู้ใช้งาน" }]}
-              >
-                <Input />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item
-                label="รหัสผ่าน"
-                name="user_password"
-                rules={[{ required: true, message: "กรุณากรอกรหัสผ่าน" }]}
-              >
-                <Input type="password" />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item
-                label="อีเมล์"
-                name="user_email"
-                rules={[{ required: true, message: "กรุณากรอกอีเมล์" }]}
-              >
-                <Input />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item
-                label="เบอร์โทรศัพท์"
-                name="user_telephone"
-                rules={[{ required: true, message: "กรุณากรอกเบอร์โทรศัพท์" }]}
-              >
-                <Input />
-              </Form.Item>
-            </Col> */}
-            <br />
             <Col span={12}>
               <Form.Item
                 label="ชื่อจริง *คุณครู"

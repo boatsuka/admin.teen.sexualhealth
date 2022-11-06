@@ -16,6 +16,7 @@ import axios from "axios";
 import { getStudentById, updateStudent } from "../../contexts/StudentContext";
 import { useNavigate, useParams } from "react-router-dom";
 import { getTeacherById } from "../../contexts/TeacherContext";
+import { getSchool } from "../../contexts/SchoolContext";
 
 function EditTeacher() {
   const avatar = [
@@ -46,38 +47,54 @@ function EditTeacher() {
   ];
   const [form] = Form.useForm();
   const navigate = useNavigate();
-  const { teacherId } = useParams();
+  const [schoolId, setSchoolId] = useState()
+  const [school, setSchool] = useState([]);
   const [mode, setMode] = useState(true);
 
-  const getTeacher = useCallback(async () => {
-    const data = await getTeacherById(teacherId);
+  const getSchoolTotal = async () => {
+    const school = await getSchool();
 
-    form.setFieldsValue(data);
-    form.setFieldsValue(data.teacher);
-  });
+    setSchool(school);
+  };
 
   const onSwitchMode = async (checked) => {
     setMode(checked);
   };
 
   const onFinish = async (values) => {
-    console.log(values)
-    await axios.patch(`${import.meta.env.VITE_API}/teacher/edit/${teacherId}`, {
-      teacher_thai_firstname: values.teacher_thai_firstname,
-      teache_thai_lastname: values.teache_thai_lastname,
-      teacher_nick_name: values.teacher_nick_name,
-      teacher_image_path: values.teacher_image_path,
-    })
-    .then(async (res) => {
-       console.log(res)
-      }).catch((err) => {
-        console.log(err)
-      })
+   await axios
+      .all([
+        axios.post(`${import.meta.env.VITE_API}/teacher/create`, {
+          teacher_thai_firstname: values.teacher_thai_firstname,
+          teache_thai_lastname: values.teache_thai_lastname,
+          teacher_nick_name: values.teacher_nick_name,
+          teacher_image_path: values.teacher_image_path,
+          teacher_nickname_sound_path: "string",
+          school: values.school,
+        }),
+      ])
+      .then(
+        axios.spread(async (...res) => {
+         await axios.post(`${import.meta.env.VITE_API}/user/create`, {
+            user_loginname: values.user_loginname,
+            user_password: values.user_password,
+            user_full_name: values.user_full_name,
+            user_email: values.user_email,
+            user_telephone: values.user_telephone,
+            user_role: "NORMAL_USER_ROLE",
+            user_image_path: values.teacher_image_path,
+            teacher: res[0].data.teacher_id,
+            school: values.school,
+          });
+        })
+      )
+   await navigate(`/school/profile/${schoolId}`)
   };
 
   useEffect(() => {
-    getTeacher();
-  });
+    getSchoolTotal();
+    setSchoolId(localStorage.getItem('school_id'))
+  }, []);
 
   return (
     <>
@@ -108,13 +125,73 @@ function EditTeacher() {
                 <Input />
               </Form.Item>
             </Col>
-            <Col span={24}>
+            <Col span={12}>
               <Form.Item
                 label="ชื่อเล่น *คุณครู"
                 name="teacher_nick_name"
                 rules={[{ required: true, message: "กรุณากรอกชื่อผู้ใช้งาน" }]}
               >
                 <Input />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                label="ชื่อผู้ใช้งาน *คุณครู"
+                name="user_loginname"
+                rules={[{ required: true, message: "กรุณากรอกชื่อผู้ใช้งาน" }]}
+              >
+                <Input />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                label="รหัสผ่าน *คุณครู"
+                name="user_password"
+                rules={[{ required: true, message: "กรุณากรอกรหัสผ่าน" }]}
+              >
+                <Input type="password" />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                label="ชื่อเต็ม *คุณครู"
+                name="user_full_name"
+                rules={[{ required: true, message: "กรุณากรอกชื่อเต็ม" }]}
+              >
+                <Input />
+              </Form.Item>
+            </Col>
+            <Col span={24}>
+              <Form.Item
+                label="อีเมล์ *คุณครู"
+                name="user_email"
+                rules={[{ required: true, message: "กรุณากรอกอีเมล์" }]}
+              >
+                <Input />
+              </Form.Item>
+            </Col>
+            <Col span={24}>
+              <Form.Item
+                label="เบอร์โทรศัพท์ *คุณครู"
+                name="user_telephone"
+                rules={[{ required: true, message: "กรุณากรอกอีเมล์" }]}
+              >
+                <Input />
+              </Form.Item>
+            </Col>
+            <Col span={24}>
+              <Form.Item
+                label="โรงเรียน *คุณครู"
+                name="school"
+                rules={[{ required: true, message: "กรุณากรอกโรงเรียน" }]}
+              >
+                <Select>
+                  {school.map((option, index) => (
+                    <Select.Option key={index} value={option.school_id}>
+                      {option.school_thai_name}
+                    </Select.Option>
+                  ))}
+                </Select>
               </Form.Item>
             </Col>
             <Col span={24}>

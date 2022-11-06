@@ -14,3 +14,11 @@ export const getUserById = async (userId) => {
 
     return data
 }
+
+export const deleteTeacher = async (teacherId) => {
+    const data = await axios
+    .delete(`${import.meta.env.VITE_API}/teacher/remove-hard/${teacherId}`)
+    .then((res) => res.data);
+
+  return data
+}
